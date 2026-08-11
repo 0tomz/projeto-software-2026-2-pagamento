@@ -20,7 +20,7 @@ public class ValidadorPagamento {
 		}
 	}
 
-	public void validar(PagamentoDto dto) {
+	public void validarBoleto(PagamentoDto dto) {
 		if (dto.getTipo() != TipoPagamento.BOLETO) {
 			throw new ValidacaoPagamentoException("Tipo de pagamento deve ser BOLETO");
 		}

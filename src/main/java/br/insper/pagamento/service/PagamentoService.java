@@ -54,13 +54,13 @@ public class PagamentoService {
 
 		if (pagamento.getTipo() == TipoPagamento.PIX) {
 			ProcessadorPix processadorPix = new ProcessadorPix();
-			sucesso = processadorPix.processar(pagamento);
+			sucesso = processadorPix.processarPix(pagamento);
 		} else if (pagamento.getTipo() == TipoPagamento.CREDITO) {
 			ProcessadorCredito processadorCredito = new ProcessadorCredito();
-			sucesso = processadorCredito.processar(pagamento);
+			sucesso = processadorCredito.processarCredito(pagamento);
 		} else if (pagamento.getTipo() == TipoPagamento.BOLETO) {
 			ProcessadorBoleto processadorBoleto = new ProcessadorBoleto();
-			sucesso = processadorBoleto.processar(pagamento);
+			sucesso = processadorBoleto.processarBoleto(pagamento);
 		} else {
 			throw new ValidacaoPagamentoException("Tipo de pagamento desconhecido: " + pagamento.getTipo());
 		}
@@ -74,11 +74,11 @@ public class PagamentoService {
 		validadorPagamentoBase.validarCamposObrigatorios(dto);
 
 		if (dto.getTipo() == TipoPagamento.PIX) {
-			validadorPix.validar(dto);
+			validadorPagamentoBase.validarPix(dto);
 		} else if (dto.getTipo() == TipoPagamento.CREDITO) {
-			validadorCredito.validar(dto);
+			validadorPagamentoBase.validarCredito(dto);
 		} else if (dto.getTipo() == TipoPagamento.BOLETO) {
-			validadorBoleto.validar(dto);
+			validadorPagamentoBase.validarBoleto(dto);
 		}
 	}
 }

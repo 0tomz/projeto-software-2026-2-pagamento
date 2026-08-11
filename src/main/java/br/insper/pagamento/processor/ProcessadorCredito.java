@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public class ProcessadorCredito {
 
-	public boolean processar(Pagamento pagamento) {
+	public boolean processarCredito(Pagamento pagamento) {
 		try {
 			System.out.println("Processando pagamento com Cartão de Crédito...");
 			System.out.println("Número do Cartão: " + mascararCartao(pagamento.getNumeroCartao()));

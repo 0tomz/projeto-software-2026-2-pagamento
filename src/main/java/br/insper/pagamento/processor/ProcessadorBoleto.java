@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public class ProcessadorBoleto {
 
-	public boolean processar(Pagamento pagamento) {
+	public boolean processarBoleto(Pagamento pagamento) {
 		try {
 			System.out.println("Processando pagamento com Boleto Bancário...");
 			System.out.println("Número de parcelas: " + pagamento.getParcelas());

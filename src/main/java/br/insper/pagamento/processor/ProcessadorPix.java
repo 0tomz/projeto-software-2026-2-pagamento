@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public class ProcessadorPix {
 
-	public boolean processar(Pagamento pagamento) {
+	public boolean processarPix(Pagamento pagamento) {
 		try {
 			System.out.println("Processando pagamento PIX...");
 			System.out.println("Chave Origem: " + pagamento.getChaveOrigem());
