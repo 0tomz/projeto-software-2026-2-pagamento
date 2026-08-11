@@ -1,0 +1,332 @@
+{
+  "info": {
+    "name": "API Pagamentos",
+    "description": "Coleção para testar a API de Pagamentos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Criar Pagamento PIX",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"PIX\",\n  \"valor\": 150.50,\n  \"parcelas\": 1,\n  \"dataCompra\": \"2026-08-11\",\n  \"chaveOrigem\": \"12345678901@cpf\",\n  \"chaveDestino\": \"98765432109@cpf\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Criar Pagamento Crédito (Parcelado)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"CREDITO\",\n  \"valor\": 500.00,\n  \"parcelas\": 3,\n  \"dataCompra\": \"2026-08-11\",\n  \"numeroCartao\": \"1234567890123456\",\n  \"dataValidade\": \"12/26\",\n  \"cvc\": \"123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Criar Pagamento Boleto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"BOLETO\",\n  \"valor\": 200.00,\n  \"parcelas\": 2,\n  \"dataCompra\": \"2026-08-11\"\n}"
+        },
+        "description": "Nota: O código de barras é gerado automaticamente no backend após processar o pagamento",
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Listar Todos os Pagamentos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Obter Pagamento por ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Processar Pagamento",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos/1/processar",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos",
+            "1",
+            "processar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Deletar Pagamento",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Fluxo Completo - Criar e Processar Boleto",
+      "item": [
+        {
+          "name": "1. Criar Boleto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"BOLETO\",\n  \"valor\": 350.00,\n  \"parcelas\": 3,\n  \"dataCompra\": \"2026-08-11\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/pagamentos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "pagamentos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Processar Boleto (gera código de barras)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/pagamentos/3/processar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "pagamentos",
+                "3",
+                "processar"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Obter Boleto com Código de Barras",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/pagamentos/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "pagamentos",
+                "3"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teste - PIX sem chave origem",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"PIX\",\n  \"valor\": 100.00,\n  \"parcelas\": 1,\n  \"dataCompra\": \"2026-08-11\",\n  \"chaveDestino\": \"98765432109@cpf\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Teste - Crédito sem CVC",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"CREDITO\",\n  \"valor\": 300.00,\n  \"parcelas\": 2,\n  \"dataCompra\": \"2026-08-11\",\n  \"numeroCartao\": \"1234567890123456\",\n  \"dataValidade\": \"12/26\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Teste - Valor inválido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"PIX\",\n  \"valor\": -50.00,\n  \"parcelas\": 1,\n  \"dataCompra\": \"2026-08-11\",\n  \"chaveOrigem\": \"12345678901@cpf\",\n  \"chaveDestino\": \"98765432109@cpf\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/pagamentos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "pagamentos"
+          ]
+        }
+      }
+    }
+  ]
+}
