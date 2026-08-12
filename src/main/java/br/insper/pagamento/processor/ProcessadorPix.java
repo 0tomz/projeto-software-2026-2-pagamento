@@ -2,12 +2,14 @@ package br.insper.pagamento.processor;
 
 import br.insper.pagamento.entity.Pagamento;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-public class ProcessadorPix {
+@Service("PIX")
+public class ProcessadorPix implements Processador {
 
-	public boolean processarPix(Pagamento pagamento) {
+	public boolean processar(Pagamento pagamento) {
 		try {
 			System.out.println("Processando pagamento PIX...");
 			System.out.println("Chave Origem: " + pagamento.getChaveOrigem());

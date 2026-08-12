@@ -2,13 +2,15 @@ package br.insper.pagamento.processor;
 
 import br.insper.pagamento.entity.Pagamento;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class ProcessadorCredito {
+@Service("CREDITO")
+public class ProcessadorCredito implements Processador {
 
-	public boolean processarCredito(Pagamento pagamento) {
+	public boolean processar(Pagamento pagamento) {
 		try {
 			System.out.println("Processando pagamento com Cartão de Crédito...");
 			System.out.println("Número do Cartão: " + mascararCartao(pagamento.getNumeroCartao()));

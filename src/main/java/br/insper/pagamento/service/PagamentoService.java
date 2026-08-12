@@ -4,15 +4,14 @@ import br.insper.pagamento.dto.PagamentoDto;
 import br.insper.pagamento.entity.Pagamento;
 import br.insper.pagamento.entity.TipoPagamento;
 import br.insper.pagamento.exception.ValidacaoPagamentoException;
-import br.insper.pagamento.processor.ProcessadorBoleto;
-import br.insper.pagamento.processor.ProcessadorCredito;
-import br.insper.pagamento.processor.ProcessadorPix;
+import br.insper.pagamento.processor.*;
 import br.insper.pagamento.repository.PagamentoRepository;
 import br.insper.pagamento.validator.ValidadorPagamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,6 +19,9 @@ public class PagamentoService {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+
+	@Autowired
+	private Map<String, Processador> processadores;
 
 	public Pagamento criar(PagamentoDto dto) {
 		validarPagamento(dto);
@@ -48,22 +50,11 @@ public class PagamentoService {
 				.findById(id)
 				.orElseThrow(() -> new ValidacaoPagamentoException("Pagamento com ID " + id + " não encontrado"));
 
-		boolean sucesso;
-
-		if (pagamento.getTipo() == TipoPagamento.PIX) {
-			ProcessadorPix processadorPix = new ProcessadorPix();
-			sucesso = processadorPix.processarPix(pagamento);
-		} else if (pagamento.getTipo() == TipoPagamento.CREDITO) {
-			ProcessadorCredito processadorCredito = new ProcessadorCredito();
-			sucesso = processadorCredito.processarCredito(pagamento);
-		} else if (pagamento.getTipo() == TipoPagamento.BOLETO) {
-			ProcessadorBoleto processadorBoleto = new ProcessadorBoleto();
-			sucesso = processadorBoleto.processarBoleto(pagamento);
-		} else {
-			throw new ValidacaoPagamentoException("Tipo de pagamento desconhecido: " + pagamento.getTipo());
-		}
+		Processador processador = processadores.get(pagamento.getTipo().toString());
+		boolean sucesso = processador.processar(pagamento);
 
 		pagamentoRepository.save(pagamento);
+
 		return sucesso;
 	}
 

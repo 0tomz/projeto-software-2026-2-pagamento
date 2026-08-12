@@ -2,12 +2,14 @@ package br.insper.pagamento.processor;
 
 import br.insper.pagamento.entity.Pagamento;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-public class ProcessadorBoleto {
+@Service("BOLETO")
+public class ProcessadorBoleto implements Processador {
 
-	public boolean processarBoleto(Pagamento pagamento) {
+	public boolean processar(Pagamento pagamento) {
 		try {
 			System.out.println("Processando pagamento com Boleto Bancário...");
 			System.out.println("Número de parcelas: " + pagamento.getParcelas());
