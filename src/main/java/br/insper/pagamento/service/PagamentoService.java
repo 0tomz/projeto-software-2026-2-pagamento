@@ -44,12 +44,10 @@ public class PagamentoService {
 	}
 
 	public boolean processar(Long id) {
-		Optional<Pagamento> pagamentoOpt = pagamentoRepository.findById(id);
-		if (pagamentoOpt.isEmpty()) {
-			throw new ValidacaoPagamentoException("Pagamento com ID " + id + " não encontrado");
-		}
+		Pagamento pagamento = pagamentoRepository
+				.findById(id)
+				.orElseThrow(() -> new ValidacaoPagamentoException("Pagamento com ID " + id + " não encontrado"));
 
-		Pagamento pagamento = pagamentoOpt.get();
 		boolean sucesso;
 
 		if (pagamento.getTipo() == TipoPagamento.PIX) {
