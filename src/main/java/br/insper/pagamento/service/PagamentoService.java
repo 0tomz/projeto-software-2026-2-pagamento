@@ -4,6 +4,8 @@ import br.insper.pagamento.dto.PagamentoDto;
 import br.insper.pagamento.entity.Pagamento;
 import br.insper.pagamento.entity.TipoPagamento;
 import br.insper.pagamento.exception.ValidacaoPagamentoException;
+import br.insper.pagamento.observer.PagamentoObserver;
+import br.insper.pagamento.observer.PagamentoObservable;
 import br.insper.pagamento.processor.*;
 import br.insper.pagamento.repository.PagamentoRepository;
 import br.insper.pagamento.validator.ValidadorPagamento;
@@ -15,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class PagamentoService {
+public class PagamentoService implements PagamentoObservable {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
@@ -23,10 +25,24 @@ public class PagamentoService {
 	@Autowired
 	private Map<String, Processador> processadores;
 
+	@Autowired(required = false)
+	private List<PagamentoObserver> observers;
+
+	@Override
+	public void notificarObservadores(Pagamento pagamento, String statusAnterior) {
+		if (observers != null) {
+			for (PagamentoObserver observer : observers) {
+				observer.atualizar(pagamento, statusAnterior, pagamento.getStatus());
+			}
+		}
+	}
+
 	public Pagamento criar(PagamentoDto dto) {
 		validarPagamento(dto);
 		Pagamento pagamento = Pagamento.fromDto(dto);
-		return pagamentoRepository.save(pagamento);
+		Pagamento salvo = pagamentoRepository.save(pagamento);
+		notificarObservadores(salvo, null);
+		return salvo;
 	}
 
 	public List<Pagamento> listarTodos() {
@@ -50,10 +66,16 @@ public class PagamentoService {
 				.findById(id)
 				.orElseThrow(() -> new ValidacaoPagamentoException("Pagamento com ID " + id + " não encontrado"));
 
+		String statusAnterior = pagamento.getStatus();
+
 		Processador processador = processadores.get(pagamento.getTipo().toString());
 		boolean sucesso = processador.processar(pagamento);
 
 		pagamentoRepository.save(pagamento);
+
+		if (sucesso) {
+			notificarObservadores(pagamento, statusAnterior);
+		}
 
 		return sucesso;
 	}
